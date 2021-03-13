@@ -4,7 +4,7 @@ const tableData = data;
 // Reference the HTML table using D3
 var tbody = d3.select("tbody");
 
-function buildData(data){
+function buildTable(data){
     // Clearing out any existing data
     tbody.html("");
     
@@ -20,6 +20,29 @@ function buildData(data){
             let cell = row.append("td");
             cell.text(val);
         });
-    });
-    
+    });    
 }
+
+function handleClick(){
+    // Get the datetime value from the filter
+    let date = d3.select("#datetime").property("value");
+    
+    let filteredData = tableData;
+
+    // Check if the date was entered and filter the data using the date
+    if (date) {
+        // Apply the filter to the table data only to keep rows which 
+        // match the date
+        filteredData = filteredData.filter(row => row.datetime === date);   
+    }
+
+    // Rebuild the table using the filteredData to take into account any filters
+    // based on the date entered
+    buildTable(filteredData);
+}
+
+// Listen for the click
+d3.selectAll("#filter-btn").on("click", handleClick);
+
+// Build the table when the page loads
+buildTable(tableData);
